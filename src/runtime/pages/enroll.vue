@@ -3,9 +3,10 @@ const { user, loading: authLoading, fetchUser } = useIdpAuth()
 const route = useRoute()
 
 const agentId = computed(() => route.query.id as string || '')
+const agentEmail = computed(() => route.query.email as string || '')
 const agentName = computed(() => route.query.name as string || '')
 const agentKey = computed(() => route.query.key as string || '')
-const validParams = computed(() => agentName.value && agentKey.value.startsWith('ssh-ed25519 '))
+const validParams = computed(() => agentEmail.value && agentName.value && agentKey.value.startsWith('ssh-ed25519 '))
 
 const owner = ref('')
 const approver = ref('')
@@ -30,6 +31,7 @@ async function handleEnroll() {
       method: 'POST',
       body: {
         id: agentId.value || undefined,
+        email: agentEmail.value,
         name: agentName.value,
         publicKey: agentKey.value,
         owner: owner.value,
@@ -77,7 +79,7 @@ async function handleEnroll() {
         v-else-if="!validParams"
         color="error"
         title="Invalid enrollment URL"
-        description="Missing or invalid name/key query parameters."
+        description="Missing or invalid email/name/key query parameters."
       />
 
       <UAlert
@@ -89,6 +91,10 @@ async function handleEnroll() {
 
       <template v-else>
         <div class="space-y-4">
+          <UFormField label="Agent Email">
+            <UInput :model-value="agentEmail" readonly class="font-mono text-xs" />
+          </UFormField>
+
           <UFormField label="Agent Name">
             <UInput :model-value="agentName" readonly />
           </UFormField>

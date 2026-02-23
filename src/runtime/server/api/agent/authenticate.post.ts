@@ -30,12 +30,7 @@ export default defineEventHandler(async (event) => {
 
   const signingKey = await keyStore.getSigningKey()
   const token = await issueAgentToken(
-    {
-      sub: agent.id,
-      name: agent.name,
-      owner: agent.owner,
-      approver: agent.approver,
-    },
+    { sub: agent.email },
     getIdpIssuer(),
     signingKey.privateKey,
     signingKey.kid,
@@ -44,6 +39,7 @@ export default defineEventHandler(async (event) => {
   return {
     token,
     agent_id: agent.id,
+    email: agent.email,
     name: agent.name,
     expires_in: 3600,
   }

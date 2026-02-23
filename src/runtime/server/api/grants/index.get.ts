@@ -22,9 +22,9 @@ export default defineEventHandler(async (event) => {
 
   const ownedAgents = await agentStore.findByOwner(email)
   const approvedAgents = await agentStore.findByApprover(email)
-  const agentIds = new Set([
-    ...ownedAgents.map(a => a.id),
-    ...approvedAgents.map(a => a.id),
+  const agentEmails = new Set([
+    ...ownedAgents.map(a => a.email),
+    ...approvedAgents.map(a => a.email),
   ])
 
   const allGrants = await grantStore.findAll()
@@ -33,11 +33,8 @@ export default defineEventHandler(async (event) => {
       return true
     if (grant.request.requester === email)
       return true
-    if (grant.request.requester.startsWith('agent:')) {
-      const agentId = grant.request.requester.slice(6)
-      if (agentIds.has(agentId))
-        return true
-    }
+    if (agentEmails.has(grant.request.requester))
+      return true
     if (grant.status === 'pending')
       return true
     return false

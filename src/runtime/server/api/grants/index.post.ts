@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   const agentPayload = await tryAgentAuth(event)
   if (agentPayload) {
-    body.requester = `agent:${agentPayload.sub}`
+    body.requester = agentPayload.sub
   }
 
   if (!body.requester || !body.target || !body.grant_type) {

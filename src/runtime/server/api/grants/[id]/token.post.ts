@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Grant not found' })
   }
 
-  if (grant.request.requester !== `agent:${agentPayload.sub}`) {
+  if (grant.request.requester !== agentPayload.sub) {
     throw createError({ statusCode: 403, statusMessage: 'Grant does not belong to this agent' })
   }
 

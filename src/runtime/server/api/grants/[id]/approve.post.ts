@@ -16,12 +16,9 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Grant not found' })
   }
 
-  if (grant.request.requester.startsWith('agent:')) {
-    const agentId = grant.request.requester.slice(6)
-    const agent = await agentStore.findById(agentId)
-    if (agent && agent.approver !== email && !isAdmin(email)) {
-      throw createError({ statusCode: 403, statusMessage: 'Only the agent approver or admin can approve this grant' })
-    }
+  const agent = await agentStore.findByEmail(grant.request.requester)
+  if (agent && agent.approver !== email && !isAdmin(email)) {
+    throw createError({ statusCode: 403, statusMessage: 'Only the agent approver or admin can approve this grant' })
   }
 
   try {
