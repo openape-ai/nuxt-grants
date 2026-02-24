@@ -14,7 +14,7 @@ const enrolling = ref(false)
 const declined = ref(false)
 const error = ref('')
 
-await fetchUser()
+onMounted(() => fetchUser())
 
 watch(user, (u) => {
   if (u?.email) {
