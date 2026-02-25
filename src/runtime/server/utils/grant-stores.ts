@@ -1,12 +1,12 @@
 import { createGrantStore } from './grant-store'
-import { createChallengeStore } from './challenge-store'
+import { createGrantChallengeStore } from './challenge-store'
 
 let _stores: ReturnType<typeof initStores> | null = null
 
 function initStores() {
   return {
     grantStore: createGrantStore(),
-    challengeStore: createChallengeStore(),
+    challengeStore: createGrantChallengeStore(),
   }
 }
 

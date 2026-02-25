@@ -11,7 +11,7 @@ export interface ChallengeStore {
   consumeChallenge: (challenge: string, agentId: string) => Promise<boolean>
 }
 
-export function createChallengeStore(): ChallengeStore {
+export function createGrantChallengeStore(): ChallengeStore {
   const storage = useAppStorage()
 
   return {
