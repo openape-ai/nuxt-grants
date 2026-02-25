@@ -1,0 +1,13 @@
+# @openape/nuxt-grants
+
+OpenAPE Grants Nuxt module — adds grant management, agent auth, and approval flows.
+
+## Installation
+
+```bash
+npm install @openape/nuxt-grants
+```
+
+## License
+
+MIT

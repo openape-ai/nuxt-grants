@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "description": "OpenAPE Grants Nuxt module — adds grant management, agent auth, and approval flows (IdP-only)",
-  "author": "Delta Mind GmbH",
+  "author": "Patrick Hofmann",
   "license": "MIT",
   "exports": {
     ".": {
@@ -23,19 +23,26 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.16.0",
-    "@openape/core": "workspace:*",
-    "@openape/grants": "workspace:*",
+    "@openape/core": "^0.1.0",
+    "@openape/grants": "^0.1.0",
     "defu": "^6.1.4",
     "jose": "^5.9.0"
   },
   "peerDependencies": {
-    "@openape/nuxt-auth-idp": "workspace:*",
+    "@openape/nuxt-auth-idp": "^0.1.0",
     "nuxt": "^4.0.0"
   },
   "devDependencies": {
-    "@openape/nuxt-auth-idp": "workspace:*",
+    "@openape/nuxt-auth-idp": "^0.1.0",
     "@nuxt/module-builder": "^0.8.4",
     "nuxt": "^4.3.1",
     "typescript": "^5.7.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openape-ai/nuxt-grants.git"
   }
 }
