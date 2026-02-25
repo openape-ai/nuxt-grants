@@ -1,4 +1,7 @@
 import { approveGrant, issueAuthzJWT } from '@openape/grants'
+import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { getIdpIssuer, isAdmin, requireAuth, useIdpStores } from '@openape/nuxt-auth-idp/server'
+import { useGrantStores } from '../../../utils/grant-stores'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')

@@ -1,3 +1,6 @@
+import { createError, defineEventHandler, readBody } from 'h3'
+import { requireAdmin, useIdpStores } from '@openape/nuxt-auth-idp/server'
+
 export default defineEventHandler(async (event) => {
   const adminEmail = await requireAdmin(event)
 

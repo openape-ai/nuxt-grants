@@ -1,5 +1,8 @@
 import type { GrantType, OpenApeGrantRequest } from '@openape/core'
 import { createGrant } from '@openape/grants'
+import { createError, defineEventHandler, readBody } from 'h3'
+import { tryAgentAuth } from '@openape/nuxt-auth-idp/server'
+import { useGrantStores } from '../../utils/grant-stores'
 
 const VALID_GRANT_TYPES: GrantType[] = ['once', 'timed', 'always']
 

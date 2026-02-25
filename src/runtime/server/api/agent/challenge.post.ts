@@ -1,3 +1,7 @@
+import { createError, defineEventHandler, readBody } from 'h3'
+import { useIdpStores } from '@openape/nuxt-auth-idp/server'
+import { useGrantStores } from '../../utils/grant-stores'
+
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ agent_id: string }>(event)
 

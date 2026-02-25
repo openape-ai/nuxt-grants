@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto'
+import { useAppStorage } from '@openape/nuxt-auth-idp/server'
 
 interface StoredChallenge {
   challenge: string

@@ -1,4 +1,7 @@
 import type { OpenApeGrant } from '@openape/core'
+import { defineEventHandler, getQuery } from 'h3'
+import { getAppSession, isAdmin, useIdpStores } from '@openape/nuxt-auth-idp/server'
+import { useGrantStores } from '../../utils/grant-stores'
 
 export default defineEventHandler(async (event) => {
   const { grantStore } = useGrantStores()
