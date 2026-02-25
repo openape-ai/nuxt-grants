@@ -1,6 +1,6 @@
 # @openape/nuxt-grants
 
-OpenAPE Grants Nuxt module — adds grant management, agent auth, and approval flows.
+OpenApe Grants Nuxt module — adds grant management, agent auth, and approval flows.
 
 ## Installation
 

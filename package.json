@@ -2,7 +2,7 @@
   "name": "@openape/nuxt-grants",
   "type": "module",
   "version": "0.1.0",
-  "description": "OpenAPE Grants Nuxt module — adds grant management, agent auth, and approval flows (IdP-only)",
+  "description": "OpenApe Grants Nuxt module — adds grant management, agent auth, and approval flows (IdP-only)",
   "author": "Patrick Hofmann",
   "license": "MIT",
   "exports": {
