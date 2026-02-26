@@ -25,8 +25,8 @@ const loading = ref(true)
 const actionError = ref('')
 
 const pendingGrants = computed(() => grants.value.filter(g => g.status === 'pending'))
-const activeGrants = computed(() => grants.value.filter(g => g.status === 'approved'))
-const historyGrants = computed(() => grants.value.filter(g => !['pending', 'approved'].includes(g.status)))
+const activeGrants = computed(() => grants.value.filter(g => g.status === 'approved' && g.request.grant_type !== 'once'))
+const historyGrants = computed(() => grants.value.filter(g => g.status !== 'pending' && !(g.status === 'approved' && g.request.grant_type !== 'once')))
 
 onMounted(async () => {
   await fetchUser()
