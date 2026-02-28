@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { navigateTo, useIdpAuth } from '#imports'
-
 const { user, loading: authLoading, fetchUser } = useIdpAuth()
 
 interface Grant {
@@ -136,18 +133,22 @@ function formatTime(ts: number): string {
           </UCard>
           <div v-else class="space-y-3">
             <UCard v-for="grant in pendingGrants" :key="grant.id">
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex-1 text-sm space-y-1">
-                  <div class="flex items-center gap-2">
+              <div class="flex flex-col gap-3">
+                <div class="text-sm space-y-1">
+                  <div class="flex flex-wrap items-center gap-2">
                     <span class="font-mono text-xs text-dimmed">{{ grant.id.slice(0, 8) }}...</span>
                     <UBadge color="warning" variant="soft" :label="grant.status" />
+                    <UBadge color="secondary" :label="grant.request.grant_type" />
                   </div>
                   <p><span class="text-muted">Requester:</span> {{ formatRequester(grant.request.requester) }}</p>
                   <p><span class="text-muted">Target:</span> {{ grant.request.target }}</p>
-                  <p><span class="text-muted">Type:</span> {{ grant.request.grant_type }}</p>
                   <div v-if="grant.request.command?.length" class="mt-1">
                     <span class="text-muted">Command:</span>
-                    <code class="block font-mono text-xs bg-gray-900 text-green-400 rounded px-2 py-1 mt-0.5 break-all">{{ grant.request.command.join(' ') }}</code>
+                    <code class="block font-mono text-xs bg-gray-900 text-green-400 rounded px-2 py-1 mt-0.5 overflow-x-auto whitespace-pre-wrap break-words">{{ grant.request.command.join(' ') }}</code>
+                  </div>
+                  <div v-if="grant.request.permissions?.length" class="mt-1">
+                    <span class="text-muted">Permissions:</span>
+                    <code class="block font-mono text-xs bg-gray-900 text-blue-400 rounded px-2 py-1 mt-0.5 overflow-x-auto whitespace-pre-wrap break-words">{{ grant.request.permissions.join(', ') }}</code>
                   </div>
                   <p v-if="grant.request.reason">
                     <span class="text-muted">Reason:</span> {{ grant.request.reason }}
@@ -156,11 +157,11 @@ function formatTime(ts: number): string {
                     Created: {{ formatTime(grant.created_at) }}
                   </p>
                 </div>
-                <div class="flex gap-2 flex-shrink-0">
-                  <UButton color="success" size="xs" @click="approveGrant(grant.id)">
+                <div class="flex gap-2">
+                  <UButton color="success" size="sm" class="flex-1" @click="approveGrant(grant.id)">
                     Approve
                   </UButton>
-                  <UButton color="error" size="xs" @click="denyGrant(grant.id)">
+                  <UButton color="error" size="sm" class="flex-1" @click="denyGrant(grant.id)">
                     Deny
                   </UButton>
                 </div>
@@ -181,15 +182,29 @@ function formatTime(ts: number): string {
           </UCard>
           <div v-else class="space-y-3">
             <UCard v-for="grant in activeGrants" :key="grant.id">
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex-1 text-sm space-y-1">
-                  <div class="flex items-center gap-2">
+              <div class="flex flex-col sm:flex-row items-start justify-between gap-3">
+                <div class="flex-1 min-w-0 text-sm space-y-1 w-full">
+                  <div class="flex flex-wrap items-center gap-2">
                     <span class="font-mono text-xs text-dimmed">{{ grant.id.slice(0, 8) }}...</span>
                     <UBadge color="success" variant="soft" :label="grant.status" />
                     <UBadge color="secondary" :label="grant.request.grant_type" />
                   </div>
                   <p><span class="text-muted">Requester:</span> {{ formatRequester(grant.request.requester) }}</p>
                   <p><span class="text-muted">Target:</span> {{ grant.request.target }}</p>
+                  <div v-if="grant.request.command?.length" class="mt-1">
+                    <span class="text-muted">Command:</span>
+                    <code class="block font-mono text-xs bg-gray-900 text-green-400 rounded px-2 py-1 mt-0.5 overflow-x-auto whitespace-pre-wrap break-words">{{ grant.request.command.join(' ') }}</code>
+                  </div>
+                  <div v-if="grant.request.permissions?.length" class="mt-1">
+                    <span class="text-muted">Permissions:</span>
+                    <code class="block font-mono text-xs bg-gray-900 text-blue-400 rounded px-2 py-1 mt-0.5 overflow-x-auto whitespace-pre-wrap break-words">{{ grant.request.permissions.join(', ') }}</code>
+                  </div>
+                  <p v-if="grant.request.reason">
+                    <span class="text-muted">Reason:</span> {{ grant.request.reason }}
+                  </p>
+                  <p v-if="grant.decided_by" class="text-xs text-dimmed">
+                    Approved by: {{ grant.decided_by }}
+                  </p>
                   <p v-if="grant.expires_at" class="text-xs text-dimmed">
                     Expires: {{ formatTime(grant.expires_at) }}
                   </p>
@@ -220,7 +235,7 @@ function formatTime(ts: number): string {
           <div v-else class="space-y-3">
             <UCard v-for="grant in historyGrants" :key="grant.id" class="opacity-75">
               <div class="text-sm space-y-1">
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                   <span class="font-mono text-xs text-dimmed">{{ grant.id.slice(0, 8) }}...</span>
                   <UBadge
                     :color="({ denied: 'error', revoked: 'neutral', expired: 'warning', used: 'info' } as Record<string, string>)[grant.status] || 'neutral'"
@@ -232,8 +247,15 @@ function formatTime(ts: number): string {
                 <p><span class="text-muted">Target:</span> {{ grant.request.target }}</p>
                 <div v-if="grant.request.command?.length" class="mt-1">
                   <span class="text-muted">Command:</span>
-                  <code class="block font-mono text-xs bg-gray-900 text-green-400 rounded px-2 py-1 mt-0.5 break-all">{{ grant.request.command.join(' ') }}</code>
+                  <code class="block font-mono text-xs bg-gray-900 text-green-400 rounded px-2 py-1 mt-0.5 overflow-x-auto whitespace-pre-wrap break-words">{{ grant.request.command.join(' ') }}</code>
                 </div>
+                <div v-if="grant.request.permissions?.length" class="mt-1">
+                  <span class="text-muted">Permissions:</span>
+                  <code class="block font-mono text-xs bg-gray-900 text-blue-400 rounded px-2 py-1 mt-0.5 overflow-x-auto whitespace-pre-wrap break-words">{{ grant.request.permissions.join(', ') }}</code>
+                </div>
+                <p v-if="grant.request.reason">
+                  <span class="text-muted">Reason:</span> {{ grant.request.reason }}
+                </p>
                 <p v-if="grant.decided_by" class="text-xs text-dimmed">
                   Decided by: {{ grant.decided_by }}
                 </p>

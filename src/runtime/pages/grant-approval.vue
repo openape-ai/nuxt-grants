@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { navigateTo, useIdpAuth, useRoute } from '#imports'
-
 const { user, loading: authLoading, fetchUser } = useIdpAuth()
 const route = useRoute()
 
@@ -112,61 +109,33 @@ async function handleDeny() {
           <UAlert color="warning" title="An application is requesting permission:">
             <template #description>
               <dl class="text-sm space-y-2 mt-2">
-                <div class="flex justify-between">
-                  <dt class="text-muted">
-                    Requester
-                  </dt>
-                  <dd class="font-mono">
-                    {{ (grant as any).request?.requester }}
-                  </dd>
+                <div>
+                  <dt class="text-muted">Requester</dt>
+                  <dd class="font-mono text-sm break-all">{{ (grant as any).request?.requester }}</dd>
                 </div>
-                <div class="flex justify-between">
-                  <dt class="text-muted">
-                    Target
-                  </dt>
-                  <dd class="font-mono">
-                    {{ (grant as any).request?.target }}
-                  </dd>
+                <div>
+                  <dt class="text-muted">Target</dt>
+                  <dd class="font-mono text-sm">{{ (grant as any).request?.target }}</dd>
                 </div>
-                <div class="flex justify-between">
-                  <dt class="text-muted">
-                    Type
-                  </dt>
-                  <dd class="font-mono">
-                    {{ (grant as any).request?.grant_type }}
-                  </dd>
+                <div>
+                  <dt class="text-muted">Type</dt>
+                  <dd class="font-mono text-sm">{{ (grant as any).request?.grant_type }}</dd>
                 </div>
                 <div v-if="(grant as any).request?.command?.length">
-                  <dt class="text-muted mb-1">
-                    Command
-                  </dt>
-                  <dd class="font-mono text-sm bg-gray-900 text-green-400 rounded px-3 py-2 break-all">
-                    {{ (grant as any).request.command.join(' ') }}
-                  </dd>
+                  <dt class="text-muted mb-1">Command</dt>
+                  <dd class="font-mono text-xs bg-gray-900 text-green-400 rounded px-2 py-1 overflow-x-auto whitespace-pre-wrap break-words">{{ (grant as any).request.command.join(' ') }}</dd>
                 </div>
-                <div v-if="(grant as any).request?.cmd_hash" class="flex justify-between">
-                  <dt class="text-muted">
-                    Hash
-                  </dt>
-                  <dd class="font-mono text-xs text-dimmed truncate ml-2">
-                    {{ (grant as any).request.cmd_hash }}
-                  </dd>
+                <div v-if="(grant as any).request?.cmd_hash">
+                  <dt class="text-muted">Hash</dt>
+                  <dd class="font-mono text-xs text-dimmed break-all">{{ (grant as any).request.cmd_hash }}</dd>
                 </div>
-                <div v-if="(grant as any).request?.reason" class="flex justify-between">
-                  <dt class="text-muted">
-                    Reason
-                  </dt>
-                  <dd class="">
-                    {{ (grant as any).request?.reason }}
-                  </dd>
+                <div v-if="(grant as any).request?.reason">
+                  <dt class="text-muted">Reason</dt>
+                  <dd>{{ (grant as any).request?.reason }}</dd>
                 </div>
-                <div v-if="(grant as any).request?.permissions?.length" class="flex justify-between">
-                  <dt class="text-muted">
-                    Permissions
-                  </dt>
-                  <dd class="font-mono">
-                    {{ (grant as any).request?.permissions?.join(', ') }}
-                  </dd>
+                <div v-if="(grant as any).request?.permissions?.length">
+                  <dt class="text-muted">Permissions</dt>
+                  <dd class="font-mono text-sm">{{ (grant as any).request?.permissions?.join(', ') }}</dd>
                 </div>
               </dl>
             </template>
@@ -194,13 +163,37 @@ async function handleDeny() {
           </div>
         </div>
 
-        <UAlert v-else color="neutral">
-          <template #description>
-            <p class="text-center">
-              This grant has been <strong>{{ (grant as any).status }}</strong>.
-            </p>
-          </template>
-        </UAlert>
+        <div v-else class="space-y-4">
+          <UAlert
+            :color="(grant as any).status === 'approved' ? 'success' : (grant as any).status === 'denied' ? 'error' : 'neutral'"
+            :title="`Grant ${(grant as any).status}`"
+          >
+            <template #description>
+              <dl class="text-sm space-y-2 mt-2">
+                <div>
+                  <dt class="text-muted">Requester</dt>
+                  <dd class="font-mono text-sm break-all">{{ (grant as any).request?.requester }}</dd>
+                </div>
+                <div>
+                  <dt class="text-muted">Target</dt>
+                  <dd class="font-mono text-sm">{{ (grant as any).request?.target }}</dd>
+                </div>
+                <div v-if="(grant as any).request?.command?.length">
+                  <dt class="text-muted">Command</dt>
+                  <dd class="font-mono text-xs bg-gray-900 text-green-400 rounded px-2 py-1 mt-0.5 overflow-x-auto whitespace-pre-wrap break-words">{{ (grant as any).request.command.join(' ') }}</dd>
+                </div>
+                <div v-if="(grant as any).request?.reason">
+                  <dt class="text-muted">Reason</dt>
+                  <dd>{{ (grant as any).request?.reason }}</dd>
+                </div>
+                <div v-if="(grant as any).decided_by">
+                  <dt class="text-muted">Decided by</dt>
+                  <dd>{{ (grant as any).decided_by }}</dd>
+                </div>
+              </dl>
+            </template>
+          </UAlert>
+        </div>
       </template>
     </UCard>
   </div>
