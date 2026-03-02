@@ -83,4 +83,4 @@ See the [examples](../examples) directory for a fully working IdP + Grants setup
 
 ## License
 
-[MIT](./LICENSE)
+[AGPL-3.0-or-later](./LICENSE)
