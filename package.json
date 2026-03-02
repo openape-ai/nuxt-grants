@@ -4,7 +4,7 @@
   "version": "0.1.9",
   "description": "OpenAPE Grants Nuxt module — adds grant management, agent auth, and approval flows (IdP-only)",
   "author": "Delta Mind GmbH",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "exports": {
     ".": {
       "types": "./dist/types.d.mts",
