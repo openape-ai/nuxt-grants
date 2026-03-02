@@ -1,3 +1,4 @@
+import { useEvent } from 'nitropack/runtime'
 import { createGrantStore } from './grant-store'
 import { createGrantChallengeStore } from './challenge-store'
 
@@ -17,4 +18,16 @@ function getStores() {
   return _stores
 }
 
-export const useGrantStores = getStores
+export function useGrantStores() {
+  try {
+    const event = useEvent()
+    if (event?.context?.openapeGrantsStorageKey) {
+      if (!event.context._grantStores) {
+        event.context._grantStores = initStores()
+      }
+      return event.context._grantStores as ReturnType<typeof initStores>
+    }
+  }
+  catch {}
+  return getStores()
+}

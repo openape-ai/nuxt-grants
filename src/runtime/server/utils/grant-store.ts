@@ -1,13 +1,13 @@
 import type { OpenApeGrant } from '@openape/core'
 import type { GrantStore } from '@openape/grants'
-import { useAppStorage } from '@openape/nuxt-auth-idp/server'
+import { useGrantStorage } from './storage'
 
 export interface ExtendedGrantStore extends GrantStore {
   findAll: () => Promise<OpenApeGrant[]>
 }
 
 export function createGrantStore(): ExtendedGrantStore {
-  const storage = useAppStorage()
+  const storage = useGrantStorage()
 
   return {
     async save(grant) {

@@ -3,6 +3,7 @@ import { defu } from 'defu'
 
 export interface ModuleOptions {
   enablePages: boolean
+  storageKey: string
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -12,6 +13,7 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     enablePages: true,
+    storageKey: 'openape-grants',
   },
   setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
@@ -20,6 +22,12 @@ export default defineNuxtModule<ModuleOptions>({
     if (!hasNuxtModule('@openape/nuxt-auth-idp')) {
       throw new Error('@openape/nuxt-grants requires @openape/nuxt-auth-idp — add it to your modules before nuxt-grants')
     }
+
+    // Inject runtime config
+    nuxt.options.runtimeConfig.openapeGrants = defu(
+      nuxt.options.runtimeConfig.openapeGrants as Record<string, unknown> || {},
+      { storageKey: options.storageKey },
+    ) as { storageKey: string }
 
     // CORS rules for grant/agent endpoints
     nuxt.options.routeRules = defu(nuxt.options.routeRules || {}, {

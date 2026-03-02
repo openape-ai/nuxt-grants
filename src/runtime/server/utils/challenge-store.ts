@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto'
-import { useAppStorage } from '@openape/nuxt-auth-idp/server'
+import { useGrantStorage } from './storage'
 
 interface StoredChallenge {
   challenge: string
@@ -13,7 +13,7 @@ export interface ChallengeStore {
 }
 
 export function createGrantChallengeStore(): ChallengeStore {
-  const storage = useAppStorage()
+  const storage = useGrantStorage()
 
   return {
     async createChallenge(agentId) {
